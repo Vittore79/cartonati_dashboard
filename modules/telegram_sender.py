@@ -5,7 +5,6 @@ CHAT_ID = "7494998558"
 
 def send_message(text):
 
-```
 url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 
 payload = {
@@ -26,5 +25,4 @@ try:
 except Exception as error:
 
     print("Errore Telegram:", error)
-```
 
