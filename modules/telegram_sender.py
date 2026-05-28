@@ -1,43 +1,36 @@
-from telegram import Bot
-import asyncio
+import requests
 
-from config import (
-    TELEGRAM_TOKEN,
-    CHAT_ID
+BOT_TOKEN = "8312714597:AAGXOyaW8b1k_PBS0OYf92MdgoDP2fImJXs"
+CHAT_ID = "7494998558"
+
+def send_message(text):
+
+```
+url = (
+    f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 )
 
-bot = Bot(
-    token=TELEGRAM_TOKEN
-)
+payload = {
 
-# =========================
-# INVIO TELEGRAM
-# =========================
+    "chat_id": CHAT_ID,
 
-async def async_send(message):
+    "text": text
+}
 
-    try:
+try:
 
-        await bot.send_message(
-            chat_id=CHAT_ID,
-            text=message
-        )
-
-    except Exception as e:
-
-        print(
-            "Errore Telegram:",
-            e
-        )
-
-def send_message(message):
-
-    loop = asyncio.new_event_loop()
-
-    asyncio.set_event_loop(loop)
-
-    loop.run_until_complete(
-        async_send(message)
+    requests.post(
+        url,
+        json=payload,
+        timeout=10
     )
 
-    loop.close()
+    print("Messaggio Telegram inviato")
+
+except Exception as error:
+
+    print(
+        "Errore Telegram:",
+        error
+    )
+```
