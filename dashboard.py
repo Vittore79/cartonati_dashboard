@@ -383,7 +383,8 @@ if st.session_state.pending_action:
                 action["value"]
             )
 
-            st.session_state.rss_widget = ""
+            if "rss_widget" in st.session_state:
+                del st.session_state["rss_widget"]
 
         elif action["type"] == "delete_rss":
 
@@ -398,8 +399,11 @@ if st.session_state.pending_action:
                 action["value"]
             )
 
-            st.session_state.yt_name_widget = ""
-            st.session_state.yt_id_widget = ""
+            if "yt_name_widget" in st.session_state:
+                del st.session_state["yt_name_widget"]
+
+            if "yt_id_widget" in st.session_state:
+                del st.session_state["yt_id_widget"]
 
         elif action["type"] == "delete_yt":
 
@@ -414,7 +418,8 @@ if st.session_state.pending_action:
                 action["value"]
             )
 
-            st.session_state.keyword_widget = ""
+            if "keyword_widget" in st.session_state:
+                del st.session_state["keyword_widget"]
 
         elif action["type"] == "delete_kw":
 
