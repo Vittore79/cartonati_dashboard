@@ -61,7 +61,7 @@ def save_json(path, data):
         )
 
 # ======================================================
-# CARICAMENTO DATI
+# CARICA DATI
 # ======================================================
 
 alerts = load_json(
@@ -152,33 +152,35 @@ for index, feed in enumerate(
         }
 
 # ======================================================
-# INPUT RSS
+# FORM RSS
 # ======================================================
 
-new_feed = st.sidebar.text_input(
-    "Nuovo feed RSS",
-    key="rss_widget"
-)
-
-# ======================================================
-# BOTTONE RSS
-# ======================================================
-
-if st.sidebar.button(
-    "➕ Aggiungi feed"
+with st.sidebar.form(
+    "rss_form",
+    clear_on_submit=True
 ):
 
-    if (
-        new_feed
-        and new_feed not in sources["rss_feeds"]
-    ):
+    new_feed = st.text_input(
+        "Nuovo feed RSS"
+    )
 
-        st.session_state.pending_action = {
+    submit_feed = st.form_submit_button(
+        "➕ Aggiungi feed"
+    )
 
-            "type": "add_rss",
+    if submit_feed:
 
-            "value": new_feed
-        }
+        if (
+            new_feed
+            and new_feed not in sources["rss_feeds"]
+        ):
+
+            st.session_state.pending_action = {
+
+                "type": "add_rss",
+
+                "value": new_feed
+            }
 
 # ======================================================
 # YOUTUBE CHANNELS
@@ -209,43 +211,44 @@ for index, channel in enumerate(
         }
 
 # ======================================================
-# INPUT YOUTUBE
+# FORM YOUTUBE
 # ======================================================
 
-new_channel_name = st.sidebar.text_input(
-    "Nome canale",
-    key="yt_name_widget"
-)
-
-new_channel_id = st.sidebar.text_input(
-    "ID canale YouTube",
-    key="yt_id_widget"
-)
-
-# ======================================================
-# BOTTONE YOUTUBE
-# ======================================================
-
-if st.sidebar.button(
-    "➕ Aggiungi canale"
+with st.sidebar.form(
+    "youtube_form",
+    clear_on_submit=True
 ):
 
-    if (
-        new_channel_name
-        and new_channel_id
-    ):
+    new_channel_name = st.text_input(
+        "Nome canale"
+    )
 
-        st.session_state.pending_action = {
+    new_channel_id = st.text_input(
+        "ID canale YouTube"
+    )
 
-            "type": "add_yt",
+    submit_channel = st.form_submit_button(
+        "➕ Aggiungi canale"
+    )
 
-            "value": {
+    if submit_channel:
 
-                "name": new_channel_name,
+        if (
+            new_channel_name
+            and new_channel_id
+        ):
 
-                "id": new_channel_id
+            st.session_state.pending_action = {
+
+                "type": "add_yt",
+
+                "value": {
+
+                    "name": new_channel_name,
+
+                    "id": new_channel_id
+                }
             }
-        }
 
 # ======================================================
 # KEYWORDS
@@ -274,33 +277,35 @@ for index, word in enumerate(
         }
 
 # ======================================================
-# INPUT KEYWORD
+# FORM KEYWORDS
 # ======================================================
 
-new_keyword = st.sidebar.text_input(
-    "Nuova keyword",
-    key="keyword_widget"
-)
-
-# ======================================================
-# BOTTONE KEYWORD
-# ======================================================
-
-if st.sidebar.button(
-    "➕ Aggiungi keyword"
+with st.sidebar.form(
+    "keyword_form",
+    clear_on_submit=True
 ):
 
-    if (
-        new_keyword
-        and new_keyword not in filters["important_words"]
-    ):
+    new_keyword = st.text_input(
+        "Nuova keyword"
+    )
 
-        st.session_state.pending_action = {
+    submit_keyword = st.form_submit_button(
+        "➕ Aggiungi keyword"
+    )
 
-            "type": "add_kw",
+    if submit_keyword:
 
-            "value": new_keyword
-        }
+        if (
+            new_keyword
+            and new_keyword not in filters["important_words"]
+        ):
+
+            st.session_state.pending_action = {
+
+                "type": "add_kw",
+
+                "value": new_keyword
+            }
 
 # ======================================================
 # CONFERMA OPERAZIONI
@@ -383,9 +388,6 @@ if st.session_state.pending_action:
                 action["value"]
             )
 
-            if "rss_widget" in st.session_state:
-                del st.session_state["rss_widget"]
-
         elif action["type"] == "delete_rss":
 
             sources["rss_feeds"].remove(
@@ -399,12 +401,6 @@ if st.session_state.pending_action:
                 action["value"]
             )
 
-            if "yt_name_widget" in st.session_state:
-                del st.session_state["yt_name_widget"]
-
-            if "yt_id_widget" in st.session_state:
-                del st.session_state["yt_id_widget"]
-
         elif action["type"] == "delete_yt":
 
             sources["youtube_channels"].remove(
@@ -417,9 +413,6 @@ if st.session_state.pending_action:
             filters["important_words"].append(
                 action["value"]
             )
-
-            if "keyword_widget" in st.session_state:
-                del st.session_state["keyword_widget"]
 
         elif action["type"] == "delete_kw":
 
