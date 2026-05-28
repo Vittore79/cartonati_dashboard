@@ -26,6 +26,18 @@ SOURCES_FILE = "config/sources.json"
 if "pending_action" not in st.session_state:
     st.session_state.pending_action = None
 
+if "keyword_input_value" not in st.session_state:
+    st.session_state.keyword_input_value = ""
+
+if "rss_input_value" not in st.session_state:
+    st.session_state.rss_input_value = ""
+
+if "yt_name_input_value" not in st.session_state:
+    st.session_state.yt_name_input_value = ""
+
+if "yt_id_input_value" not in st.session_state:
+    st.session_state.yt_id_input_value = ""
+
 # ======================================================
 # FUNZIONI
 # ======================================================
@@ -61,7 +73,7 @@ def save_json(path, data):
         )
 
 # ======================================================
-# CARICA DATI
+# CARICAMENTO DATI
 # ======================================================
 
 alerts = load_json(
@@ -151,33 +163,40 @@ for index, feed in enumerate(
             "value": feed
         }
 
-# FORM RSS
-with st.sidebar.form(
-    "rss_form",
-    clear_on_submit=True
+# ======================================================
+# INPUT RSS
+# ======================================================
+
+new_feed = st.sidebar.text_input(
+
+    "Nuovo feed RSS",
+
+    value=st.session_state.rss_input_value,
+
+    key="rss_widget"
+)
+
+st.session_state.rss_input_value = new_feed
+
+# ======================================================
+# BOTTONE RSS
+# ======================================================
+
+if st.sidebar.button(
+    "➕ Aggiungi feed"
 ):
 
-    new_feed = st.text_input(
-        "Nuovo feed RSS"
-    )
+    if (
+        new_feed
+        and new_feed not in sources["rss_feeds"]
+    ):
 
-    submit_feed = st.form_submit_button(
-        "➕ Aggiungi feed"
-    )
+        st.session_state.pending_action = {
 
-    if submit_feed:
+            "type": "add_rss",
 
-        if (
-            new_feed
-            and new_feed not in sources["rss_feeds"]
-        ):
-
-            st.session_state.pending_action = {
-
-                "type": "add_rss",
-
-                "value": new_feed
-            }
+            "value": new_feed
+        }
 
 # ======================================================
 # YOUTUBE CHANNELS
@@ -207,42 +226,60 @@ for index, channel in enumerate(
             "value": channel
         }
 
-# FORM YOUTUBE
-with st.sidebar.form(
-    "youtube_form",
-    clear_on_submit=True
+# ======================================================
+# INPUT YOUTUBE
+# ======================================================
+
+new_channel_name = st.sidebar.text_input(
+
+    "Nome canale",
+
+    value=st.session_state.yt_name_input_value,
+
+    key="yt_name_widget"
+)
+
+st.session_state.yt_name_input_value = (
+    new_channel_name
+)
+
+new_channel_id = st.sidebar.text_input(
+
+    "ID canale YouTube",
+
+    value=st.session_state.yt_id_input_value,
+
+    key="yt_id_widget"
+)
+
+st.session_state.yt_id_input_value = (
+    new_channel_id
+)
+
+# ======================================================
+# BOTTONE YOUTUBE
+# ======================================================
+
+if st.sidebar.button(
+    "➕ Aggiungi canale"
 ):
 
-    new_channel_name = st.text_input(
-        "Nome canale"
-    )
+    if (
+        new_channel_name
+        and new_channel_id
+    ):
 
-    new_channel_id = st.text_input(
-        "ID canale YouTube"
-    )
+        st.session_state.pending_action = {
 
-    submit_channel = st.form_submit_button(
-        "➕ Aggiungi canale"
-    )
+            "type": "add_yt",
 
-    if submit_channel:
+            "value": {
 
-        if (
-            new_channel_name
-            and new_channel_id
-        ):
+                "name": new_channel_name,
 
-            st.session_state.pending_action = {
-
-                "type": "add_yt",
-
-                "value": {
-
-                    "name": new_channel_name,
-
-                    "id": new_channel_id
-                }
+                "id": new_channel_id
             }
+        }
 
 # ======================================================
 # KEYWORDS
@@ -270,33 +307,42 @@ for index, word in enumerate(
             "value": word
         }
 
-# FORM KEYWORDS
-with st.sidebar.form(
-    "keyword_form",
-    clear_on_submit=True
+# ======================================================
+# INPUT KEYWORD
+# ======================================================
+
+new_keyword = st.sidebar.text_input(
+
+    "Nuova keyword",
+
+    value=st.session_state.keyword_input_value,
+
+    key="keyword_widget"
+)
+
+st.session_state.keyword_input_value = (
+    new_keyword
+)
+
+# ======================================================
+# BOTTONE KEYWORD
+# ======================================================
+
+if st.sidebar.button(
+    "➕ Aggiungi keyword"
 ):
 
-    new_keyword = st.text_input(
-        "Nuova keyword"
-    )
+    if (
+        new_keyword
+        and new_keyword not in filters["important_words"]
+    ):
 
-    submit_keyword = st.form_submit_button(
-        "➕ Aggiungi keyword"
-    )
+        st.session_state.pending_action = {
 
-    if submit_keyword:
+            "type": "add_kw",
 
-        if (
-            new_keyword
-            and new_keyword not in filters["important_words"]
-        ):
-
-            st.session_state.pending_action = {
-
-                "type": "add_kw",
-
-                "value": new_keyword
-            }
+            "value": new_keyword
+        }
 
 # ======================================================
 # CONFERMA OPERAZIONI
@@ -379,6 +425,8 @@ if st.session_state.pending_action:
                 action["value"]
             )
 
+            st.session_state.rss_input_value = ""
+
         elif action["type"] == "delete_rss":
 
             sources["rss_feeds"].remove(
@@ -392,6 +440,9 @@ if st.session_state.pending_action:
                 action["value"]
             )
 
+            st.session_state.yt_name_input_value = ""
+            st.session_state.yt_id_input_value = ""
+
         elif action["type"] == "delete_yt":
 
             sources["youtube_channels"].remove(
@@ -404,6 +455,8 @@ if st.session_state.pending_action:
             filters["important_words"].append(
                 action["value"]
             )
+
+            st.session_state.keyword_input_value = ""
 
         elif action["type"] == "delete_kw":
 
@@ -434,11 +487,6 @@ if st.session_state.pending_action:
         st.sidebar.success(
             "Operazione completata!"
         )
-
-        # reset totale pagina
-        st.session_state.pending_action = None
-
-        st.query_params.clear()
 
         st.rerun()
 
