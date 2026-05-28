@@ -16,9 +16,7 @@ st.set_page_config(
 # ======================================================
 
 ALERTS_FILE = "alerts.json"
-
 FILTERS_FILE = "config/filters.json"
-
 SOURCES_FILE = "config/sources.json"
 
 # ======================================================
@@ -153,26 +151,33 @@ for index, feed in enumerate(
             "value": feed
         }
 
-new_feed = st.sidebar.text_input(
-    "Nuovo feed RSS",
-    key="rss_input"
-)
-
-if st.sidebar.button(
-    "➕ Aggiungi feed"
+# FORM RSS
+with st.sidebar.form(
+    "rss_form",
+    clear_on_submit=True
 ):
 
-    if (
-        new_feed
-        and new_feed not in sources["rss_feeds"]
-    ):
+    new_feed = st.text_input(
+        "Nuovo feed RSS"
+    )
 
-        st.session_state.pending_action = {
+    submit_feed = st.form_submit_button(
+        "➕ Aggiungi feed"
+    )
 
-            "type": "add_rss",
+    if submit_feed:
 
-            "value": new_feed
-        }
+        if (
+            new_feed
+            and new_feed not in sources["rss_feeds"]
+        ):
+
+            st.session_state.pending_action = {
+
+                "type": "add_rss",
+
+                "value": new_feed
+            }
 
 # ======================================================
 # YOUTUBE CHANNELS
@@ -202,36 +207,42 @@ for index, channel in enumerate(
             "value": channel
         }
 
-new_channel_name = st.sidebar.text_input(
-    "Nome canale",
-    key="channel_name_input"
-)
-
-new_channel_id = st.sidebar.text_input(
-    "ID canale YouTube",
-    key="channel_id_input"
-)
-
-if st.sidebar.button(
-    "➕ Aggiungi canale"
+# FORM YOUTUBE
+with st.sidebar.form(
+    "youtube_form",
+    clear_on_submit=True
 ):
 
-    if (
-        new_channel_name
-        and new_channel_id
-    ):
+    new_channel_name = st.text_input(
+        "Nome canale"
+    )
 
-        st.session_state.pending_action = {
+    new_channel_id = st.text_input(
+        "ID canale YouTube"
+    )
 
-            "type": "add_yt",
+    submit_channel = st.form_submit_button(
+        "➕ Aggiungi canale"
+    )
 
-            "value": {
+    if submit_channel:
 
-                "name": new_channel_name,
+        if (
+            new_channel_name
+            and new_channel_id
+        ):
 
-                "id": new_channel_id
+            st.session_state.pending_action = {
+
+                "type": "add_yt",
+
+                "value": {
+
+                    "name": new_channel_name,
+
+                    "id": new_channel_id
+                }
             }
-        }
 
 # ======================================================
 # KEYWORDS
@@ -259,26 +270,33 @@ for index, word in enumerate(
             "value": word
         }
 
-new_keyword = st.sidebar.text_input(
-    "Nuova keyword",
-    key="keyword_input"
-)
-
-if st.sidebar.button(
-    "➕ Aggiungi keyword"
+# FORM KEYWORDS
+with st.sidebar.form(
+    "keyword_form",
+    clear_on_submit=True
 ):
 
-    if (
-        new_keyword
-        and new_keyword not in filters["important_words"]
-    ):
+    new_keyword = st.text_input(
+        "Nuova keyword"
+    )
 
-        st.session_state.pending_action = {
+    submit_keyword = st.form_submit_button(
+        "➕ Aggiungi keyword"
+    )
 
-            "type": "add_kw",
+    if submit_keyword:
 
-            "value": new_keyword
-        }
+        if (
+            new_keyword
+            and new_keyword not in filters["important_words"]
+        ):
+
+            st.session_state.pending_action = {
+
+                "type": "add_kw",
+
+                "value": new_keyword
+            }
 
 # ======================================================
 # CONFERMA OPERAZIONI
@@ -288,11 +306,11 @@ if st.session_state.pending_action:
 
     action = st.session_state.pending_action
 
-    # ==================================================
-    # MESSAGGI
-    # ==================================================
-
     message = "Confermi operazione?"
+
+    # ==================================================
+    # KEYWORDS
+    # ==================================================
 
     if action["type"] == "add_kw":
 
@@ -308,17 +326,25 @@ if st.session_state.pending_action:
             f"{action['value']} ?"
         )
 
+    # ==================================================
+    # RSS
+    # ==================================================
+
     elif action["type"] == "add_rss":
 
         message = (
-            f"Confermi aggiunta feed RSS?"
+            "Confermi aggiunta feed RSS?"
         )
 
     elif action["type"] == "delete_rss":
 
         message = (
-            f"Confermi eliminazione feed RSS?"
+            "Confermi eliminazione feed RSS?"
         )
+
+    # ==================================================
+    # YOUTUBE
+    # ==================================================
 
     elif action["type"] == "add_yt":
 
@@ -400,26 +426,6 @@ if st.session_state.pending_action:
         )
 
         # ==================================================
-        # RESET INPUTS
-        # ==================================================
-
-        for key in [
-
-            "rss_input",
-
-            "channel_name_input",
-
-            "channel_id_input",
-
-            "keyword_input"
-
-        ]:
-
-            if key in st.session_state:
-
-                del st.session_state[key]
-
-        # ==================================================
         # RESET AZIONE
         # ==================================================
 
@@ -462,11 +468,11 @@ for alert in alerts:
 
         text = (
 
-            alert["titolo"] +
+            alert["titolo"]
 
-            " " +
+            + " "
 
-            alert["fonte"]
+            + alert["fonte"]
 
         ).lower()
 
