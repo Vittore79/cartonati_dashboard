@@ -25,10 +25,10 @@ SOURCES_FILE = "config/sources.json"
 # TITOLO
 # =========================
 
-st.title("🚨 Cartonati Alert Dashboard")
+st.title("🚨 Centrale Operativa Cartonati")
 
 st.write(
-    "Monitoraggio live news, YouTube e social"
+    "Monitoraggio live di news, YouTube e social calcistici"
 )
 
 # =========================
@@ -91,7 +91,7 @@ else:
 # SIDEBAR
 # =========================
 
-st.sidebar.title("⚙️ Controlli")
+st.sidebar.title("⚙️ Pannello Controllo")
 
 # =========================
 # FILTRO TIPO
@@ -99,7 +99,7 @@ st.sidebar.title("⚙️ Controlli")
 
 selected_types = st.sidebar.multiselect(
 
-    "Filtra per tipo",
+    "Filtra contenuti",
 
     ["rss", "youtube"],
 
@@ -111,14 +111,14 @@ selected_types = st.sidebar.multiselect(
 # =========================
 
 search_term = st.sidebar.text_input(
-    "🔎 Cerca keyword"
+    "🔎 Cerca parola chiave"
 )
 
 # =========================
 # SORGENTI
 # =========================
 
-st.sidebar.header("📡 RSS Feeds")
+st.sidebar.header("📡 Fonti RSS")
 
 for feed in sources.get(
     "rss_feeds",
@@ -133,7 +133,7 @@ for feed in sources.get(
 # YOUTUBE
 # =========================
 
-st.sidebar.header("🎥 YouTube")
+st.sidebar.header("🎥 Canali YouTube")
 
 for channel in sources.get(
     "youtube_channels",
@@ -148,7 +148,7 @@ for channel in sources.get(
 # FILTRI
 # =========================
 
-st.sidebar.header("🏷️ Keywords")
+st.sidebar.header("🏷️ Parole Chiave")
 
 for word in filters.get(
     "important_words",
@@ -226,7 +226,7 @@ col3.metric(
 # ALERT
 # =========================
 
-st.header("🚨 Live Feed")
+st.header("🚨 Flusso Notizie Live")
 
 for alert in filtered_alerts[:100]:
 
@@ -237,7 +237,7 @@ for alert in filtered_alerts[:100]:
         )
 
         st.write(
-            f"📌 Tipo: {alert['tipo']}"
+            f"📌 Categoria: {alert['tipo']}"
         )
 
         st.write(
@@ -245,7 +245,7 @@ for alert in filtered_alerts[:100]:
         )
 
         st.write(
-            f"🕒 Data: {alert['data']}"
+            f"🕒 Rilevato: {alert['data']}"
         )
 
         st.markdown(
