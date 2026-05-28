@@ -2,6 +2,8 @@ import streamlit as st
 import json
 import os
 import re
+import subprocess
+from datetime import datetime
 
 # ======================================================
 # CONFIG PAGINA
@@ -102,6 +104,57 @@ st.title("🚨 Centrale Operativa Cartonati")
 st.write(
     "Monitoraggio live di news, YouTube e social calcistici"
 )
+
+# ======================================================
+# CONTROLLO MANUALE
+# ======================================================
+
+st.divider()
+
+last_update = datetime.now().strftime(
+    "%d/%m/%Y %H:%M:%S"
+)
+
+col1, col2 = st.columns([3, 1])
+
+with col1:
+
+    st.info(
+        f"🕒 Ultimo controllo dashboard: {last_update}"
+    )
+
+with col2:
+
+    if st.button(
+        "🔄 Avvia scansione"
+    ):
+
+        with st.spinner(
+            "Scansione in corso..."
+        ):
+
+            try:
+
+                result = subprocess.run(
+
+                    ["python", "main.py"],
+
+                    capture_output=True,
+
+                    text=True
+                )
+
+                st.success(
+                    "Scansione completata!"
+                )
+
+                st.rerun()
+
+            except Exception as error:
+
+                st.error(
+                    f"Errore scansione: {error}"
+                )
 
 # ======================================================
 # SIDEBAR
@@ -245,7 +298,6 @@ with st.sidebar.expander(
 
                 channel_name = youtube_link
 
-                # estrazione handle @nomecanale
                 match = re.search(
                     r'@([A-Za-z0-9_\-]+)',
                     youtube_link
@@ -339,10 +391,6 @@ if st.session_state.pending_action:
 
     message = "Confermi operazione?"
 
-    # ==================================================
-    # KEYWORDS
-    # ==================================================
-
     if action["type"] == "add_kw":
 
         message = (
@@ -357,10 +405,6 @@ if st.session_state.pending_action:
             f"{action['value']} ?"
         )
 
-    # ==================================================
-    # RSS
-    # ==================================================
-
     elif action["type"] == "add_rss":
 
         message = (
@@ -372,10 +416,6 @@ if st.session_state.pending_action:
         message = (
             "Confermi eliminazione feed RSS?"
         )
-
-    # ==================================================
-    # YOUTUBE
-    # ==================================================
 
     elif action["type"] == "add_yt":
 
