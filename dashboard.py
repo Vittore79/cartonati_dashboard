@@ -120,14 +120,56 @@ search_term = st.sidebar.text_input(
 
 st.sidebar.header("📡 Fonti RSS")
 
-for feed in sources.get(
+# =========================
+# RSS FEEDS
+# =========================
+
+st.sidebar.header("📰 Fonti RSS")
+
+rss_feeds = sources.get(
     "rss_feeds",
     []
+)
+
+for feed in rss_feeds:
+
+    st.sidebar.write(f"• {feed}")
+
+new_feed = st.sidebar.text_input(
+    "Nuovo feed RSS"
+)
+
+if st.sidebar.button(
+    "➕ Aggiungi feed"
 ):
 
-    st.sidebar.write(
-        f"• {feed}"
-    )
+    if (
+        new_feed
+        and new_feed not in rss_feeds
+    ):
+
+        rss_feeds.append(new_feed)
+
+        sources["rss_feeds"] = rss_feeds
+
+        with open(
+            SOURCES_FILE,
+            "w",
+            encoding="utf-8"
+        ) as file:
+
+            json.dump(
+                sources,
+                file,
+                indent=4,
+                ensure_ascii=False
+            )
+
+        st.sidebar.success(
+            "Feed aggiunto!"
+        )
+
+        st.rerun()
 
 # =========================
 # YOUTUBE
@@ -150,14 +192,56 @@ for channel in sources.get(
 
 st.sidebar.header("🏷️ Parole Chiave")
 
-for word in filters.get(
+# =========================
+# GESTIONE KEYWORDS
+# =========================
+
+st.sidebar.header("🏷️ Parole Chiave")
+
+keywords = filters.get(
     "important_words",
     []
+)
+
+for word in keywords:
+
+    st.sidebar.write(f"• {word}")
+
+new_keyword = st.sidebar.text_input(
+    "Nuova keyword"
+)
+
+if st.sidebar.button(
+    "➕ Aggiungi keyword"
 ):
 
-    st.sidebar.write(
-        f"• {word}"
-    )
+    if (
+        new_keyword
+        and new_keyword not in keywords
+    ):
+
+        keywords.append(new_keyword)
+
+        filters["important_words"] = keywords
+
+        with open(
+            FILTERS_FILE,
+            "w",
+            encoding="utf-8"
+        ) as file:
+
+            json.dump(
+                filters,
+                file,
+                indent=4,
+                ensure_ascii=False
+            )
+
+        st.sidebar.success(
+            "Keyword aggiunta!"
+        )
+
+        st.rerun()
 
 # =========================
 # FILTRA ALERT
