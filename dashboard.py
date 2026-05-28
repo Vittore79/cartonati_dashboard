@@ -4,6 +4,7 @@ import os
 import re
 import subprocess
 import requests
+import sys
 from datetime import datetime
 
 # ======================================================
@@ -138,7 +139,7 @@ with col2:
 
                 result = subprocess.run(
 
-                    ["python", "main.py"],
+                    [sys.executable, "main.py"],
 
                     capture_output=True,
 
