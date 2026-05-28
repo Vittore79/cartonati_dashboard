@@ -175,13 +175,11 @@ if st.sidebar.button(
 # YOUTUBE
 # =========================
 
-st.sidebar.header("🎥 Canali YouTube")
-
 # =========================
 # YOUTUBE CHANNELS
 # =========================
 
-st.sidebar.header("📺 Canali YouTube")
+st.sidebar.header("🎥 Canali YouTube")
 
 youtube_channels = sources.get(
     "youtube_channels",
