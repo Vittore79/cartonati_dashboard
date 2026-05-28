@@ -1,0 +1,29 @@
+{
+    "rss_feeds": [
+
+        "https://www.ansa.it/sito/notizie/sport/calcio/calcio_rss.xml",
+
+        "https://www.gazzetta.it/rss/home.xml",
+
+        "https://www.calcioefinanza.it/feed/",
+
+        "https://www.reddit.com/r/soccer/.rss",
+
+        "https://www.reddit.com/r/seriea/.rss"
+
+    ],
+
+    "youtube_channels": [
+
+        {
+            "name": "Juventibus Live",
+            "id": "UC0b6N5p6M8h5lV5Hh0fJ2JQ"
+        },
+
+        {
+            "name": "Colpo Gobbo",
+            "id": "UCxxxxxxxx"
+        }
+
+    ]
+}

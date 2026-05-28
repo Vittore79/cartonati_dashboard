@@ -1,7 +1,6 @@
 import streamlit as st
 import json
 import os
-import pandas as pd
 
 # =========================
 # CONFIG PAGINA
@@ -11,6 +10,16 @@ st.set_page_config(
     page_title="Cartonati Alert",
     layout="wide"
 )
+
+# =========================
+# FILE
+# =========================
+
+ALERTS_FILE = "alerts.json"
+
+FILTERS_FILE = "config/filters.json"
+
+SOURCES_FILE = "config/sources.json"
 
 # =========================
 # TITOLO
@@ -23,16 +32,10 @@ st.write(
 )
 
 # =========================
-# FILE JSON
+# CARICA ALERT
 # =========================
 
-JSON_FILE = "alerts.json"
-
-# =========================
-# CONTROLLO FILE
-# =========================
-
-if not os.path.exists(JSON_FILE):
+if not os.path.exists(ALERTS_FILE):
 
     st.error(
         "alerts.json non trovato"
@@ -40,12 +43,8 @@ if not os.path.exists(JSON_FILE):
 
     st.stop()
 
-# =========================
-# CARICA ALERT
-# =========================
-
 with open(
-    JSON_FILE,
+    ALERTS_FILE,
     "r",
     encoding="utf-8"
 ) as file:
@@ -53,16 +52,140 @@ with open(
     alerts = json.load(file)
 
 # =========================
-# NESSUN ALERT
+# CARICA FILTERS
 # =========================
 
-if not alerts:
+if os.path.exists(FILTERS_FILE):
 
-    st.warning(
-        "Nessun alert trovato."
+    with open(
+        FILTERS_FILE,
+        "r",
+        encoding="utf-8"
+    ) as file:
+
+        filters = json.load(file)
+
+else:
+
+    filters = {}
+
+# =========================
+# CARICA SOURCES
+# =========================
+
+if os.path.exists(SOURCES_FILE):
+
+    with open(
+        SOURCES_FILE,
+        "r",
+        encoding="utf-8"
+    ) as file:
+
+        sources = json.load(file)
+
+else:
+
+    sources = {}
+
+# =========================
+# SIDEBAR
+# =========================
+
+st.sidebar.title("⚙️ Controlli")
+
+# =========================
+# FILTRO TIPO
+# =========================
+
+selected_types = st.sidebar.multiselect(
+
+    "Filtra per tipo",
+
+    ["rss", "youtube"],
+
+    default=["rss", "youtube"]
+)
+
+# =========================
+# RICERCA
+# =========================
+
+search_term = st.sidebar.text_input(
+    "🔎 Cerca keyword"
+)
+
+# =========================
+# SORGENTI
+# =========================
+
+st.sidebar.header("📡 RSS Feeds")
+
+for feed in sources.get(
+    "rss_feeds",
+    []
+):
+
+    st.sidebar.write(
+        f"• {feed}"
     )
 
-    st.stop()
+# =========================
+# YOUTUBE
+# =========================
+
+st.sidebar.header("🎥 YouTube")
+
+for channel in sources.get(
+    "youtube_channels",
+    []
+):
+
+    st.sidebar.write(
+        f"• {channel['name']}"
+    )
+
+# =========================
+# FILTRI
+# =========================
+
+st.sidebar.header("🏷️ Keywords")
+
+for word in filters.get(
+    "important_words",
+    []
+):
+
+    st.sidebar.write(
+        f"• {word}"
+    )
+
+# =========================
+# FILTRA ALERT
+# =========================
+
+filtered_alerts = []
+
+for alert in alerts:
+
+    # filtro tipo
+    if alert["tipo"] not in selected_types:
+
+        continue
+
+    # ricerca keyword
+    if search_term:
+
+        text = (
+            alert["titolo"] +
+            " " +
+            alert["fonte"]
+        ).lower()
+
+        if search_term.lower() not in text:
+
+            continue
+
+    filtered_alerts.append(alert)
 
 # =========================
 # STATISTICHE
@@ -70,15 +193,15 @@ if not alerts:
 
 st.header("📊 Statistiche")
 
-total_alerts = len(alerts)
+total_alerts = len(filtered_alerts)
 
 youtube_alerts = len([
-    a for a in alerts
+    a for a in filtered_alerts
     if a["tipo"] == "youtube"
 ])
 
 rss_alerts = len([
-    a for a in alerts
+    a for a in filtered_alerts
     if a["tipo"] == "rss"
 ])
 
@@ -100,12 +223,12 @@ col3.metric(
 )
 
 # =========================
-# ULTIMI ALERT
+# ALERT
 # =========================
 
-st.header("🚨 Ultimi Alert")
+st.header("🚨 Live Feed")
 
-for alert in alerts[:50]:
+for alert in filtered_alerts[:100]:
 
     with st.container():
 
