@@ -131,9 +131,35 @@ rss_feeds = sources.get(
     []
 )
 
-for feed in rss_feeds:
+for index, feed in enumerate(rss_feeds):
 
-    st.sidebar.write(f"• {feed}")
+    col1, col2 = st.sidebar.columns([4, 1])
+
+    col1.write(feed)
+
+    if col2.button(
+        "❌",
+        key=f"rss_{index}"
+    ):
+
+        rss_feeds.remove(feed)
+
+        sources["rss_feeds"] = rss_feeds
+
+        with open(
+            SOURCES_FILE,
+            "w",
+            encoding="utf-8"
+        ) as file:
+
+            json.dump(
+                sources,
+                file,
+                indent=4,
+                ensure_ascii=False
+            )
+
+        st.rerun()
 
 new_feed = st.sidebar.text_input(
     "Nuovo feed RSS"
@@ -186,11 +212,7 @@ youtube_channels = sources.get(
     []
 )
 
-for channel in youtube_channels:
-
-    st.sidebar.write(
-        f"• {channel['name']}"
-    )
+{channel['name']}"
 
 new_channel_name = st.sidebar.text_input(
     "Nome canale"
@@ -252,9 +274,35 @@ keywords = filters.get(
     []
 )
 
-for word in keywords:
+for index, word in enumerate(keywords):
 
-    st.sidebar.write(f"• {word}")
+    col1, col2 = st.sidebar.columns([4, 1])
+
+    col1.write(word)
+
+    if col2.button(
+        "❌",
+        key=f"kw_{index}"
+    ):
+
+        keywords.remove(word)
+
+        filters["important_words"] = keywords
+
+        with open(
+            FILTERS_FILE,
+            "w",
+            encoding="utf-8"
+        ) as file:
+
+            json.dump(
+                filters,
+                file,
+                indent=4,
+                ensure_ascii=False
+            )
+
+        st.rerun()
 
 new_keyword = st.sidebar.text_input(
     "Nuova keyword"
