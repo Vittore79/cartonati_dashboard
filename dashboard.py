@@ -26,18 +26,6 @@ SOURCES_FILE = "config/sources.json"
 if "pending_action" not in st.session_state:
     st.session_state.pending_action = None
 
-if "keyword_input_value" not in st.session_state:
-    st.session_state.keyword_input_value = ""
-
-if "rss_input_value" not in st.session_state:
-    st.session_state.rss_input_value = ""
-
-if "yt_name_input_value" not in st.session_state:
-    st.session_state.yt_name_input_value = ""
-
-if "yt_id_input_value" not in st.session_state:
-    st.session_state.yt_id_input_value = ""
-
 # ======================================================
 # FUNZIONI
 # ======================================================
@@ -168,15 +156,9 @@ for index, feed in enumerate(
 # ======================================================
 
 new_feed = st.sidebar.text_input(
-
     "Nuovo feed RSS",
-
-    value=st.session_state.rss_input_value,
-
     key="rss_widget"
 )
-
-st.session_state.rss_input_value = new_feed
 
 # ======================================================
 # BOTTONE RSS
@@ -231,29 +213,13 @@ for index, channel in enumerate(
 # ======================================================
 
 new_channel_name = st.sidebar.text_input(
-
     "Nome canale",
-
-    value=st.session_state.yt_name_input_value,
-
     key="yt_name_widget"
 )
 
-st.session_state.yt_name_input_value = (
-    new_channel_name
-)
-
 new_channel_id = st.sidebar.text_input(
-
     "ID canale YouTube",
-
-    value=st.session_state.yt_id_input_value,
-
     key="yt_id_widget"
-)
-
-st.session_state.yt_id_input_value = (
-    new_channel_id
 )
 
 # ======================================================
@@ -312,16 +278,8 @@ for index, word in enumerate(
 # ======================================================
 
 new_keyword = st.sidebar.text_input(
-
     "Nuova keyword",
-
-    value=st.session_state.keyword_input_value,
-
     key="keyword_widget"
-)
-
-st.session_state.keyword_input_value = (
-    new_keyword
 )
 
 # ======================================================
@@ -425,7 +383,7 @@ if st.session_state.pending_action:
                 action["value"]
             )
 
-            st.session_state.rss_input_value = ""
+            st.session_state.rss_widget = ""
 
         elif action["type"] == "delete_rss":
 
@@ -440,8 +398,8 @@ if st.session_state.pending_action:
                 action["value"]
             )
 
-            st.session_state.yt_name_input_value = ""
-            st.session_state.yt_id_input_value = ""
+            st.session_state.yt_name_widget = ""
+            st.session_state.yt_id_widget = ""
 
         elif action["type"] == "delete_yt":
 
@@ -456,7 +414,7 @@ if st.session_state.pending_action:
                 action["value"]
             )
 
-            st.session_state.keyword_input_value = ""
+            st.session_state.keyword_widget = ""
 
         elif action["type"] == "delete_kw":
 
