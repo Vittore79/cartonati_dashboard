@@ -22,7 +22,7 @@ FILTERS_FILE = "config/filters.json"
 SOURCES_FILE = "config/sources.json"
 
 # ======================================================
-# INIT SESSION STATE
+# SESSION STATE
 # ======================================================
 
 if "pending_action" not in st.session_state:
@@ -63,7 +63,7 @@ def save_json(path, data):
         )
 
 # ======================================================
-# CARICAMENTO DATI
+# CARICA DATI
 # ======================================================
 
 alerts = load_json(
@@ -128,7 +128,7 @@ search_term = st.sidebar.text_input(
 )
 
 # ======================================================
-# RSS
+# RSS FEEDS
 # ======================================================
 
 st.sidebar.header("📰 Fonti RSS")
@@ -154,7 +154,8 @@ for index, feed in enumerate(
         }
 
 new_feed = st.sidebar.text_input(
-    "Nuovo feed RSS"
+    "Nuovo feed RSS",
+    key="rss_input"
 )
 
 if st.sidebar.button(
@@ -174,7 +175,7 @@ if st.sidebar.button(
         }
 
 # ======================================================
-# YOUTUBE
+# YOUTUBE CHANNELS
 # ======================================================
 
 st.sidebar.header("🎥 Canali YouTube")
@@ -202,11 +203,13 @@ for index, channel in enumerate(
         }
 
 new_channel_name = st.sidebar.text_input(
-    "Nome canale"
+    "Nome canale",
+    key="channel_name_input"
 )
 
 new_channel_id = st.sidebar.text_input(
-    "ID canale YouTube"
+    "ID canale YouTube",
+    key="channel_id_input"
 )
 
 if st.sidebar.button(
@@ -257,7 +260,8 @@ for index, word in enumerate(
         }
 
 new_keyword = st.sidebar.text_input(
-    "Nuova keyword"
+    "Nuova keyword",
+    key="keyword_input"
 )
 
 if st.sidebar.button(
@@ -335,7 +339,7 @@ if st.session_state.pending_action:
     confirm_col1, confirm_col2 = st.sidebar.columns(2)
 
     # ==================================================
-    # SI
+    # CONFERMA
     # ==================================================
 
     if confirm_col1.button(
@@ -381,7 +385,10 @@ if st.session_state.pending_action:
                 action["value"]
             )
 
-        # salva file
+        # ==================================================
+        # SALVA FILE
+        # ==================================================
+
         save_json(
             SOURCES_FILE,
             sources
@@ -392,7 +399,30 @@ if st.session_state.pending_action:
             filters
         )
 
-        # reset azione
+        # ==================================================
+        # RESET INPUTS
+        # ==================================================
+
+        for key in [
+
+            "rss_input",
+
+            "channel_name_input",
+
+            "channel_id_input",
+
+            "keyword_input"
+
+        ]:
+
+            if key in st.session_state:
+
+                del st.session_state[key]
+
+        # ==================================================
+        # RESET AZIONE
+        # ==================================================
+
         st.session_state.pending_action = None
 
         st.sidebar.success(
@@ -402,7 +432,7 @@ if st.session_state.pending_action:
         st.rerun()
 
     # ==================================================
-    # NO
+    # ANNULLA
     # ==================================================
 
     if confirm_col2.button(
@@ -450,7 +480,7 @@ for alert in alerts:
     filtered_alerts.append(alert)
 
 # ======================================================
-# STATS
+# STATISTICHE
 # ======================================================
 
 st.header("📊 Statistiche")
