@@ -3,5 +3,6 @@ schedule
 python-telegram-bot
 praw
 streamlit
+requests
 
 # rebuild
