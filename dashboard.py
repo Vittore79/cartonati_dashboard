@@ -435,6 +435,11 @@ if st.session_state.pending_action:
             "Operazione completata!"
         )
 
+        # reset totale pagina
+        st.session_state.pending_action = None
+
+        st.query_params.clear()
+
         st.rerun()
 
     # ==================================================
