@@ -144,11 +144,43 @@ with col2:
                     text=True
                 )
 
-                st.success(
-                    "Scansione completata!"
+                # ==================================================
+                # DEBUG OUTPUT
+                # ==================================================
+
+                st.subheader(
+                    "📄 Output scansione"
                 )
 
-                st.rerun()
+                st.code(
+                    result.stdout
+                )
+
+                st.subheader(
+                    "⚠️ Errori"
+                )
+
+                st.code(
+                    result.stderr
+                )
+
+                # ==================================================
+                # RISULTATO
+                # ==================================================
+
+                if result.returncode == 0:
+
+                    st.success(
+                        "✅ Scansione completata!"
+                    )
+
+                    st.rerun()
+
+                else:
+
+                    st.error(
+                        "❌ Errore durante scansione"
+                    )
 
             except Exception as error:
 
@@ -435,15 +467,10 @@ if st.session_state.pending_action:
 
     confirm_col1, confirm_col2 = st.sidebar.columns(2)
 
-    # ==================================================
-    # CONFERMA
-    # ==================================================
-
     if confirm_col1.button(
         "✅ SI"
     ):
 
-        # RSS
         if action["type"] == "add_rss":
 
             sources["rss_feeds"].append(
@@ -456,7 +483,6 @@ if st.session_state.pending_action:
                 action["value"]
             )
 
-        # YOUTUBE
         elif action["type"] == "add_yt":
 
             sources["youtube_channels"].append(
@@ -469,7 +495,6 @@ if st.session_state.pending_action:
                 action["value"]
             )
 
-        # KEYWORDS
         elif action["type"] == "add_kw":
 
             filters["important_words"].append(
@@ -482,10 +507,6 @@ if st.session_state.pending_action:
                 action["value"]
             )
 
-        # ==================================================
-        # SALVA FILE
-        # ==================================================
-
         save_json(
             SOURCES_FILE,
             sources
@@ -496,10 +517,6 @@ if st.session_state.pending_action:
             filters
         )
 
-        # ==================================================
-        # RESET AZIONE
-        # ==================================================
-
         st.session_state.pending_action = None
 
         st.sidebar.success(
@@ -507,10 +524,6 @@ if st.session_state.pending_action:
         )
 
         st.rerun()
-
-    # ==================================================
-    # ANNULLA
-    # ==================================================
 
     if confirm_col2.button(
         "❌ NO"
