@@ -1,8 +1,7 @@
+streamlit
 feedparser
 schedule
-python-telegram-bot
 praw
-streamlit
 requests
-
-# rebuild
+beautifulsoup4
+python-telegram-bot==13.15
