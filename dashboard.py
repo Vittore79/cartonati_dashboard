@@ -12,6 +12,14 @@ st.set_page_config(
 )
 
 # =========================
+# SESSION STATE
+# =========================
+
+if "pending_action" not in st.session_state:
+
+    st.session_state.pending_action = None
+
+# =========================
 # FILE
 # =========================
 
@@ -114,9 +122,9 @@ search_term = st.sidebar.text_input(
     "🔎 Cerca parola chiave"
 )
 
-# =========================
+# ======================================================
 # RSS FEEDS
-# =========================
+# ======================================================
 
 st.sidebar.header("📰 Fonti RSS")
 
@@ -136,43 +144,14 @@ for index, feed in enumerate(rss_feeds):
         key=f"rss_delete_{index}"
     ):
 
-        st.sidebar.warning(
-            "Confermi eliminazione feed?"
-        )
+        st.session_state.pending_action = {
 
-        confirm_col1, confirm_col2 = st.sidebar.columns(2)
+            "type": "delete_rss",
 
-        if confirm_col1.button(
-            "✅ SI",
-            key=f"confirm_rss_{index}"
-        ):
+            "value": feed
+        }
 
-            rss_feeds.remove(feed)
-
-            sources["rss_feeds"] = rss_feeds
-
-            with open(
-                SOURCES_FILE,
-                "w",
-                encoding="utf-8"
-            ) as file:
-
-                json.dump(
-                    sources,
-                    file,
-                    indent=4,
-                    ensure_ascii=False
-                )
-
-            st.rerun()
-
-        if confirm_col2.button(
-            "❌ NO",
-            key=f"cancel_rss_{index}"
-        ):
-
-            st.rerun()
-
+# aggiunta feed
 new_feed = st.sidebar.text_input(
     "Nuovo feed RSS"
 )
@@ -186,50 +165,16 @@ if st.sidebar.button(
         and new_feed not in rss_feeds
     ):
 
-        st.sidebar.warning(
-            "Confermi aggiunta feed?"
-        )
+        st.session_state.pending_action = {
 
-        confirm_col1, confirm_col2 = st.sidebar.columns(2)
+            "type": "add_rss",
 
-        if confirm_col1.button(
-            "✅ SI",
-            key="confirm_add_feed"
-        ):
+            "value": new_feed
+        }
 
-            rss_feeds.append(new_feed)
-
-            sources["rss_feeds"] = rss_feeds
-
-            with open(
-                SOURCES_FILE,
-                "w",
-                encoding="utf-8"
-            ) as file:
-
-                json.dump(
-                    sources,
-                    file,
-                    indent=4,
-                    ensure_ascii=False
-                )
-
-            st.sidebar.success(
-                "Feed aggiunto!"
-            )
-
-            st.rerun()
-
-        if confirm_col2.button(
-            "❌ NO",
-            key="cancel_add_feed"
-        ):
-
-            st.rerun()
-
-# =========================
-# YOUTUBE CHANNELS
-# =========================
+# ======================================================
+# YOUTUBE
+# ======================================================
 
 st.sidebar.header("🎥 Canali YouTube")
 
@@ -249,43 +194,14 @@ for index, channel in enumerate(youtube_channels):
         key=f"yt_delete_{index}"
     ):
 
-        st.sidebar.warning(
-            "Confermi eliminazione canale?"
-        )
+        st.session_state.pending_action = {
 
-        confirm_col1, confirm_col2 = st.sidebar.columns(2)
+            "type": "delete_yt",
 
-        if confirm_col1.button(
-            "✅ SI",
-            key=f"confirm_yt_{index}"
-        ):
+            "value": channel
+        }
 
-            youtube_channels.remove(channel)
-
-            sources["youtube_channels"] = youtube_channels
-
-            with open(
-                SOURCES_FILE,
-                "w",
-                encoding="utf-8"
-            ) as file:
-
-                json.dump(
-                    sources,
-                    file,
-                    indent=4,
-                    ensure_ascii=False
-                )
-
-            st.rerun()
-
-        if confirm_col2.button(
-            "❌ NO",
-            key=f"cancel_yt_{index}"
-        ):
-
-            st.rerun()
-
+# aggiunta youtube
 new_channel_name = st.sidebar.text_input(
     "Nome canale"
 )
@@ -303,55 +219,21 @@ if st.sidebar.button(
         and new_channel_id
     ):
 
-        st.sidebar.warning(
-            "Confermi aggiunta canale?"
-        )
+        st.session_state.pending_action = {
 
-        confirm_col1, confirm_col2 = st.sidebar.columns(2)
+            "type": "add_yt",
 
-        if confirm_col1.button(
-            "✅ SI",
-            key="confirm_add_channel"
-        ):
-
-            youtube_channels.append({
+            "value": {
 
                 "name": new_channel_name,
 
                 "id": new_channel_id
-            })
+            }
+        }
 
-            sources["youtube_channels"] = youtube_channels
-
-            with open(
-                SOURCES_FILE,
-                "w",
-                encoding="utf-8"
-            ) as file:
-
-                json.dump(
-                    sources,
-                    file,
-                    indent=4,
-                    ensure_ascii=False
-                )
-
-            st.sidebar.success(
-                "Canale aggiunto!"
-            )
-
-            st.rerun()
-
-        if confirm_col2.button(
-            "❌ NO",
-            key="cancel_add_channel"
-        ):
-
-            st.rerun()
-
-# =========================
-# GESTIONE KEYWORDS
-# =========================
+# ======================================================
+# KEYWORDS
+# ======================================================
 
 st.sidebar.header("🏷️ Parole Chiave")
 
@@ -371,43 +253,14 @@ for index, word in enumerate(keywords):
         key=f"kw_delete_{index}"
     ):
 
-        st.sidebar.warning(
-            "Confermi eliminazione keyword?"
-        )
+        st.session_state.pending_action = {
 
-        confirm_col1, confirm_col2 = st.sidebar.columns(2)
+            "type": "delete_kw",
 
-        if confirm_col1.button(
-            "✅ SI",
-            key=f"confirm_kw_{index}"
-        ):
+            "value": word
+        }
 
-            keywords.remove(word)
-
-            filters["important_words"] = keywords
-
-            with open(
-                FILTERS_FILE,
-                "w",
-                encoding="utf-8"
-            ) as file:
-
-                json.dump(
-                    filters,
-                    file,
-                    indent=4,
-                    ensure_ascii=False
-                )
-
-            st.rerun()
-
-        if confirm_col2.button(
-            "❌ NO",
-            key=f"cancel_kw_{index}"
-        ):
-
-            st.rerun()
-
+# aggiunta keyword
 new_keyword = st.sidebar.text_input(
     "Nuova keyword"
 )
@@ -421,50 +274,131 @@ if st.sidebar.button(
         and new_keyword not in keywords
     ):
 
-        st.sidebar.warning(
-            "Confermi aggiunta keyword?"
-        )
+        st.session_state.pending_action = {
 
-        confirm_col1, confirm_col2 = st.sidebar.columns(2)
+            "type": "add_kw",
 
-        if confirm_col1.button(
-            "✅ SI",
-            key="confirm_add_keyword"
-        ):
+            "value": new_keyword
+        }
 
-            keywords.append(new_keyword)
+# ======================================================
+# CONFERMA AZIONI
+# ======================================================
 
-            filters["important_words"] = keywords
+if st.session_state.pending_action:
 
-            with open(
-                FILTERS_FILE,
-                "w",
-                encoding="utf-8"
-            ) as file:
+    action = st.session_state.pending_action
 
-                json.dump(
-                    filters,
-                    file,
-                    indent=4,
-                    ensure_ascii=False
-                )
+    st.sidebar.warning(
+        f"Confermi operazione: {action['type']} ?"
+    )
 
-            st.sidebar.success(
-                "Keyword aggiunta!"
+    confirm_col1, confirm_col2 = st.sidebar.columns(2)
+
+    # =========================
+    # CONFERMA
+    # =========================
+
+    if confirm_col1.button(
+        "✅ SI"
+    ):
+
+        # RSS
+        if action["type"] == "add_rss":
+
+            rss_feeds.append(
+                action["value"]
             )
 
-            st.rerun()
+        elif action["type"] == "delete_rss":
 
-        if confirm_col2.button(
-            "❌ NO",
-            key="cancel_add_keyword"
-        ):
+            rss_feeds.remove(
+                action["value"]
+            )
 
-            st.rerun()
+        # YOUTUBE
+        elif action["type"] == "add_yt":
 
-# =========================
+            youtube_channels.append(
+                action["value"]
+            )
+
+        elif action["type"] == "delete_yt":
+
+            youtube_channels.remove(
+                action["value"]
+            )
+
+        # KEYWORDS
+        elif action["type"] == "add_kw":
+
+            keywords.append(
+                action["value"]
+            )
+
+        elif action["type"] == "delete_kw":
+
+            keywords.remove(
+                action["value"]
+            )
+
+        # salva sources
+        sources["rss_feeds"] = rss_feeds
+
+        sources["youtube_channels"] = youtube_channels
+
+        with open(
+            SOURCES_FILE,
+            "w",
+            encoding="utf-8"
+        ) as file:
+
+            json.dump(
+                sources,
+                file,
+                indent=4,
+                ensure_ascii=False
+            )
+
+        # salva filters
+        filters["important_words"] = keywords
+
+        with open(
+            FILTERS_FILE,
+            "w",
+            encoding="utf-8"
+        ) as file:
+
+            json.dump(
+                filters,
+                file,
+                indent=4,
+                ensure_ascii=False
+            )
+
+        st.session_state.pending_action = None
+
+        st.sidebar.success(
+            "Operazione completata!"
+        )
+
+        st.rerun()
+
+    # =========================
+    # ANNULLA
+    # =========================
+
+    if confirm_col2.button(
+        "❌ NO"
+    ):
+
+        st.session_state.pending_action = None
+
+        st.rerun()
+
+# ======================================================
 # FILTRA ALERT
-# =========================
+# ======================================================
 
 filtered_alerts = []
 
@@ -488,9 +422,9 @@ for alert in alerts:
 
     filtered_alerts.append(alert)
 
-# =========================
+# ======================================================
 # STATISTICHE
-# =========================
+# ======================================================
 
 st.header("📊 Statistiche")
 
@@ -523,9 +457,9 @@ col3.metric(
     rss_alerts
 )
 
-# =========================
-# ALERT
-# =========================
+# ======================================================
+# LIVE FEED
+# ======================================================
 
 st.header("🚨 Flusso Notizie Live")
 
