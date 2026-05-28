@@ -190,8 +190,6 @@ for channel in sources.get(
 # FILTRI
 # =========================
 
-st.sidebar.header("🏷️ Parole Chiave")
-
 # =========================
 # GESTIONE KEYWORDS
 # =========================
