@@ -1,6 +1,7 @@
 import streamlit as st
 import json
 import os
+import re
 
 # ======================================================
 # CONFIG PAGINA
@@ -200,8 +201,8 @@ with st.sidebar.expander(
 
         col1, col2 = st.columns([4, 1])
 
-        col1.write(
-            f"• {channel['name']}"
+        col1.markdown(
+            f"• [{channel['name']}]({channel['link']})"
         )
 
         if col2.button(
@@ -225,12 +226,8 @@ with st.sidebar.expander(
         clear_on_submit=True
     ):
 
-        new_channel_name = st.text_input(
-            "Nome canale"
-        )
-
-        new_channel_id = st.text_input(
-            "ID canale YouTube"
+        youtube_link = st.text_input(
+            "Link canale YouTube"
         )
 
         submit_channel = st.form_submit_button(
@@ -239,10 +236,21 @@ with st.sidebar.expander(
 
         if submit_channel:
 
-            if (
-                new_channel_name
-                and new_channel_id
-            ):
+            if youtube_link:
+
+                channel_name = youtube_link
+
+                # estrazione handle @nomecanale
+                match = re.search(
+                    r'@([A-Za-z0-9_\\-]+)',
+                    youtube_link
+                )
+
+                if match:
+
+                    channel_name = (
+                        match.group(1)
+                    )
 
                 st.session_state.pending_action = {
 
@@ -250,9 +258,9 @@ with st.sidebar.expander(
 
                     "value": {
 
-                        "name": new_channel_name,
+                        "name": channel_name,
 
-                        "id": new_channel_id
+                        "link": youtube_link
                     }
                 }
 
