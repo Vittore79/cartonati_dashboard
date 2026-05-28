@@ -115,12 +115,6 @@ search_term = st.sidebar.text_input(
 )
 
 # =========================
-# SORGENTI
-# =========================
-
-st.sidebar.header("📡 Fonti RSS")
-
-# =========================
 # RSS FEEDS
 # =========================
 
@@ -198,10 +192,6 @@ if st.sidebar.button(
         st.rerun()
 
 # =========================
-# YOUTUBE
-# =========================
-
-# =========================
 # YOUTUBE CHANNELS
 # =========================
 
@@ -212,7 +202,35 @@ youtube_channels = sources.get(
     []
 )
 
-col1.write(f"• {channel['name']}")
+for index, channel in enumerate(youtube_channels):
+
+    col1, col2 = st.sidebar.columns([4, 1])
+
+    col1.write(f"• {channel['name']}")
+
+    if col2.button(
+        "❌",
+        key=f"yt_{index}"
+    ):
+
+        youtube_channels.remove(channel)
+
+        sources["youtube_channels"] = youtube_channels
+
+        with open(
+            SOURCES_FILE,
+            "w",
+            encoding="utf-8"
+        ) as file:
+
+            json.dump(
+                sources,
+                file,
+                indent=4,
+                ensure_ascii=False
+            )
+
+        st.rerun()
 
 new_channel_name = st.sidebar.text_input(
     "Nome canale"
@@ -258,10 +276,6 @@ if st.sidebar.button(
         )
 
         st.rerun()
-
-# =========================
-# FILTRI
-# =========================
 
 # =========================
 # GESTIONE KEYWORDS
@@ -430,7 +444,7 @@ for alert in filtered_alerts[:100]:
         )
 
         st.markdown(
-            f"[🔗 Apri link]({alert['link']})"
+            f"[🔗 Apri sorgente]({alert['link']})"
         )
 
         st.divider()
