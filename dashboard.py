@@ -2,26 +2,42 @@ import streamlit as st
 import json
 import os
 
-# =========================
+# ======================================================
 # CONFIG PAGINA
-# =========================
+# ======================================================
 
 st.set_page_config(
     page_title="Cartonati Alert",
     layout="wide"
 )
 
-# =========================
+# ======================================================
 # SESSION STATE
-# =========================
+# ======================================================
 
 if "pending_action" not in st.session_state:
 
     st.session_state.pending_action = None
 
-# =========================
+if "keyword_input" not in st.session_state:
+
+    st.session_state.keyword_input = ""
+
+if "rss_input" not in st.session_state:
+
+    st.session_state.rss_input = ""
+
+if "channel_name_input" not in st.session_state:
+
+    st.session_state.channel_name_input = ""
+
+if "channel_id_input" not in st.session_state:
+
+    st.session_state.channel_id_input = ""
+
+# ======================================================
 # FILE
-# =========================
+# ======================================================
 
 ALERTS_FILE = "alerts.json"
 
@@ -29,9 +45,9 @@ FILTERS_FILE = "config/filters.json"
 
 SOURCES_FILE = "config/sources.json"
 
-# =========================
+# ======================================================
 # TITOLO
-# =========================
+# ======================================================
 
 st.title("🚨 Centrale Operativa Cartonati")
 
@@ -39,9 +55,9 @@ st.write(
     "Monitoraggio live di news, YouTube e social calcistici"
 )
 
-# =========================
+# ======================================================
 # CARICA ALERT
-# =========================
+# ======================================================
 
 if not os.path.exists(ALERTS_FILE):
 
@@ -59,9 +75,9 @@ with open(
 
     alerts = json.load(file)
 
-# =========================
+# ======================================================
 # CARICA FILTERS
-# =========================
+# ======================================================
 
 if os.path.exists(FILTERS_FILE):
 
@@ -77,9 +93,9 @@ else:
 
     filters = {}
 
-# =========================
+# ======================================================
 # CARICA SOURCES
-# =========================
+# ======================================================
 
 if os.path.exists(SOURCES_FILE):
 
@@ -95,15 +111,15 @@ else:
 
     sources = {}
 
-# =========================
+# ======================================================
 # SIDEBAR
-# =========================
+# ======================================================
 
 st.sidebar.title("⚙️ Pannello Controllo")
 
-# =========================
+# ======================================================
 # FILTRO TIPO
-# =========================
+# ======================================================
 
 selected_types = st.sidebar.multiselect(
 
@@ -114,9 +130,9 @@ selected_types = st.sidebar.multiselect(
     default=["rss", "youtube"]
 )
 
-# =========================
+# ======================================================
 # RICERCA
-# =========================
+# ======================================================
 
 search_term = st.sidebar.text_input(
     "🔎 Cerca parola chiave"
@@ -151,9 +167,10 @@ for index, feed in enumerate(rss_feeds):
             "value": feed
         }
 
-# aggiunta feed
+# aggiungi feed
 new_feed = st.sidebar.text_input(
-    "Nuovo feed RSS"
+    "Nuovo feed RSS",
+    key="rss_input"
 )
 
 if st.sidebar.button(
@@ -187,7 +204,9 @@ for index, channel in enumerate(youtube_channels):
 
     col1, col2 = st.sidebar.columns([4, 1])
 
-    col1.write(f"• {channel['name']}")
+    col1.write(
+        f"• {channel['name']}"
+    )
 
     if col2.button(
         "❌",
@@ -201,13 +220,15 @@ for index, channel in enumerate(youtube_channels):
             "value": channel
         }
 
-# aggiunta youtube
+# aggiungi canale
 new_channel_name = st.sidebar.text_input(
-    "Nome canale"
+    "Nome canale",
+    key="channel_name_input"
 )
 
 new_channel_id = st.sidebar.text_input(
-    "ID canale YouTube"
+    "ID canale YouTube",
+    key="channel_id_input"
 )
 
 if st.sidebar.button(
@@ -260,9 +281,10 @@ for index, word in enumerate(keywords):
             "value": word
         }
 
-# aggiunta keyword
+# aggiungi keyword
 new_keyword = st.sidebar.text_input(
-    "Nuova keyword"
+    "Nuova keyword",
+    key="keyword_input"
 )
 
 if st.sidebar.button(
@@ -289,15 +311,67 @@ if st.session_state.pending_action:
 
     action = st.session_state.pending_action
 
-    st.sidebar.warning(
-        f"Confermi operazione: {action['type']} ?"
-    )
+    message = "Confermi operazione?"
+
+    # ==================================================
+    # KEYWORDS
+    # ==================================================
+
+    if action["type"] == "add_kw":
+
+        message = (
+            f"Confermi aggiunta keyword: "
+            f"{action['value']} ?"
+        )
+
+    elif action["type"] == "delete_kw":
+
+        message = (
+            f"Confermi eliminazione keyword: "
+            f"{action['value']} ?"
+        )
+
+    # ==================================================
+    # RSS
+    # ==================================================
+
+    elif action["type"] == "add_rss":
+
+        message = (
+            f"Confermi aggiunta feed RSS?"
+        )
+
+    elif action["type"] == "delete_rss":
+
+        message = (
+            f"Confermi eliminazione feed RSS?"
+        )
+
+    # ==================================================
+    # YOUTUBE
+    # ==================================================
+
+    elif action["type"] == "add_yt":
+
+        message = (
+            f"Confermi aggiunta canale: "
+            f"{action['value']['name']} ?"
+        )
+
+    elif action["type"] == "delete_yt":
+
+        message = (
+            f"Confermi eliminazione canale: "
+            f"{action['value']['name']} ?"
+        )
+
+    st.sidebar.warning(message)
 
     confirm_col1, confirm_col2 = st.sidebar.columns(2)
 
-    # =========================
+    # ==================================================
     # CONFERMA
-    # =========================
+    # ==================================================
 
     if confirm_col1.button(
         "✅ SI"
@@ -342,7 +416,10 @@ if st.session_state.pending_action:
                 action["value"]
             )
 
-        # salva sources
+        # ==================================================
+        # SALVA SOURCES
+        # ==================================================
+
         sources["rss_feeds"] = rss_feeds
 
         sources["youtube_channels"] = youtube_channels
@@ -360,7 +437,10 @@ if st.session_state.pending_action:
                 ensure_ascii=False
             )
 
-        # salva filters
+        # ==================================================
+        # SALVA FILTERS
+        # ==================================================
+
         filters["important_words"] = keywords
 
         with open(
@@ -376,6 +456,18 @@ if st.session_state.pending_action:
                 ensure_ascii=False
             )
 
+        # ==================================================
+        # RESET INPUTS
+        # ==================================================
+
+        st.session_state.keyword_input = ""
+
+        st.session_state.rss_input = ""
+
+        st.session_state.channel_name_input = ""
+
+        st.session_state.channel_id_input = ""
+
         st.session_state.pending_action = None
 
         st.sidebar.success(
@@ -384,9 +476,9 @@ if st.session_state.pending_action:
 
         st.rerun()
 
-    # =========================
+    # ==================================================
     # ANNULLA
-    # =========================
+    # ==================================================
 
     if confirm_col2.button(
         "❌ NO"
