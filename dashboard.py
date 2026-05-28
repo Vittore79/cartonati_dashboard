@@ -133,27 +133,45 @@ for index, feed in enumerate(rss_feeds):
 
     if col2.button(
         "❌",
-        key=f"rss_{index}"
+        key=f"rss_delete_{index}"
     ):
 
-        rss_feeds.remove(feed)
+        st.sidebar.warning(
+            "Confermi eliminazione feed?"
+        )
 
-        sources["rss_feeds"] = rss_feeds
+        confirm_col1, confirm_col2 = st.sidebar.columns(2)
 
-        with open(
-            SOURCES_FILE,
-            "w",
-            encoding="utf-8"
-        ) as file:
+        if confirm_col1.button(
+            "✅ SI",
+            key=f"confirm_rss_{index}"
+        ):
 
-            json.dump(
-                sources,
-                file,
-                indent=4,
-                ensure_ascii=False
-            )
+            rss_feeds.remove(feed)
 
-        st.rerun()
+            sources["rss_feeds"] = rss_feeds
+
+            with open(
+                SOURCES_FILE,
+                "w",
+                encoding="utf-8"
+            ) as file:
+
+                json.dump(
+                    sources,
+                    file,
+                    indent=4,
+                    ensure_ascii=False
+                )
+
+            st.rerun()
+
+        if confirm_col2.button(
+            "❌ NO",
+            key=f"cancel_rss_{index}"
+        ):
+
+            st.rerun()
 
 new_feed = st.sidebar.text_input(
     "Nuovo feed RSS"
@@ -168,28 +186,46 @@ if st.sidebar.button(
         and new_feed not in rss_feeds
     ):
 
-        rss_feeds.append(new_feed)
-
-        sources["rss_feeds"] = rss_feeds
-
-        with open(
-            SOURCES_FILE,
-            "w",
-            encoding="utf-8"
-        ) as file:
-
-            json.dump(
-                sources,
-                file,
-                indent=4,
-                ensure_ascii=False
-            )
-
-        st.sidebar.success(
-            "Feed aggiunto!"
+        st.sidebar.warning(
+            "Confermi aggiunta feed?"
         )
 
-        st.rerun()
+        confirm_col1, confirm_col2 = st.sidebar.columns(2)
+
+        if confirm_col1.button(
+            "✅ SI",
+            key="confirm_add_feed"
+        ):
+
+            rss_feeds.append(new_feed)
+
+            sources["rss_feeds"] = rss_feeds
+
+            with open(
+                SOURCES_FILE,
+                "w",
+                encoding="utf-8"
+            ) as file:
+
+                json.dump(
+                    sources,
+                    file,
+                    indent=4,
+                    ensure_ascii=False
+                )
+
+            st.sidebar.success(
+                "Feed aggiunto!"
+            )
+
+            st.rerun()
+
+        if confirm_col2.button(
+            "❌ NO",
+            key="cancel_add_feed"
+        ):
+
+            st.rerun()
 
 # =========================
 # YOUTUBE CHANNELS
@@ -210,27 +246,45 @@ for index, channel in enumerate(youtube_channels):
 
     if col2.button(
         "❌",
-        key=f"yt_{index}"
+        key=f"yt_delete_{index}"
     ):
 
-        youtube_channels.remove(channel)
+        st.sidebar.warning(
+            "Confermi eliminazione canale?"
+        )
 
-        sources["youtube_channels"] = youtube_channels
+        confirm_col1, confirm_col2 = st.sidebar.columns(2)
 
-        with open(
-            SOURCES_FILE,
-            "w",
-            encoding="utf-8"
-        ) as file:
+        if confirm_col1.button(
+            "✅ SI",
+            key=f"confirm_yt_{index}"
+        ):
 
-            json.dump(
-                sources,
-                file,
-                indent=4,
-                ensure_ascii=False
-            )
+            youtube_channels.remove(channel)
 
-        st.rerun()
+            sources["youtube_channels"] = youtube_channels
+
+            with open(
+                SOURCES_FILE,
+                "w",
+                encoding="utf-8"
+            ) as file:
+
+                json.dump(
+                    sources,
+                    file,
+                    indent=4,
+                    ensure_ascii=False
+                )
+
+            st.rerun()
+
+        if confirm_col2.button(
+            "❌ NO",
+            key=f"cancel_yt_{index}"
+        ):
+
+            st.rerun()
 
 new_channel_name = st.sidebar.text_input(
     "Nome canale"
@@ -249,33 +303,51 @@ if st.sidebar.button(
         and new_channel_id
     ):
 
-        youtube_channels.append({
-
-            "name": new_channel_name,
-
-            "id": new_channel_id
-        })
-
-        sources["youtube_channels"] = youtube_channels
-
-        with open(
-            SOURCES_FILE,
-            "w",
-            encoding="utf-8"
-        ) as file:
-
-            json.dump(
-                sources,
-                file,
-                indent=4,
-                ensure_ascii=False
-            )
-
-        st.sidebar.success(
-            "Canale aggiunto!"
+        st.sidebar.warning(
+            "Confermi aggiunta canale?"
         )
 
-        st.rerun()
+        confirm_col1, confirm_col2 = st.sidebar.columns(2)
+
+        if confirm_col1.button(
+            "✅ SI",
+            key="confirm_add_channel"
+        ):
+
+            youtube_channels.append({
+
+                "name": new_channel_name,
+
+                "id": new_channel_id
+            })
+
+            sources["youtube_channels"] = youtube_channels
+
+            with open(
+                SOURCES_FILE,
+                "w",
+                encoding="utf-8"
+            ) as file:
+
+                json.dump(
+                    sources,
+                    file,
+                    indent=4,
+                    ensure_ascii=False
+                )
+
+            st.sidebar.success(
+                "Canale aggiunto!"
+            )
+
+            st.rerun()
+
+        if confirm_col2.button(
+            "❌ NO",
+            key="cancel_add_channel"
+        ):
+
+            st.rerun()
 
 # =========================
 # GESTIONE KEYWORDS
@@ -296,27 +368,45 @@ for index, word in enumerate(keywords):
 
     if col2.button(
         "❌",
-        key=f"kw_{index}"
+        key=f"kw_delete_{index}"
     ):
 
-        keywords.remove(word)
+        st.sidebar.warning(
+            "Confermi eliminazione keyword?"
+        )
 
-        filters["important_words"] = keywords
+        confirm_col1, confirm_col2 = st.sidebar.columns(2)
 
-        with open(
-            FILTERS_FILE,
-            "w",
-            encoding="utf-8"
-        ) as file:
+        if confirm_col1.button(
+            "✅ SI",
+            key=f"confirm_kw_{index}"
+        ):
 
-            json.dump(
-                filters,
-                file,
-                indent=4,
-                ensure_ascii=False
-            )
+            keywords.remove(word)
 
-        st.rerun()
+            filters["important_words"] = keywords
+
+            with open(
+                FILTERS_FILE,
+                "w",
+                encoding="utf-8"
+            ) as file:
+
+                json.dump(
+                    filters,
+                    file,
+                    indent=4,
+                    ensure_ascii=False
+                )
+
+            st.rerun()
+
+        if confirm_col2.button(
+            "❌ NO",
+            key=f"cancel_kw_{index}"
+        ):
+
+            st.rerun()
 
 new_keyword = st.sidebar.text_input(
     "Nuova keyword"
@@ -331,28 +421,46 @@ if st.sidebar.button(
         and new_keyword not in keywords
     ):
 
-        keywords.append(new_keyword)
-
-        filters["important_words"] = keywords
-
-        with open(
-            FILTERS_FILE,
-            "w",
-            encoding="utf-8"
-        ) as file:
-
-            json.dump(
-                filters,
-                file,
-                indent=4,
-                ensure_ascii=False
-            )
-
-        st.sidebar.success(
-            "Keyword aggiunta!"
+        st.sidebar.warning(
+            "Confermi aggiunta keyword?"
         )
 
-        st.rerun()
+        confirm_col1, confirm_col2 = st.sidebar.columns(2)
+
+        if confirm_col1.button(
+            "✅ SI",
+            key="confirm_add_keyword"
+        ):
+
+            keywords.append(new_keyword)
+
+            filters["important_words"] = keywords
+
+            with open(
+                FILTERS_FILE,
+                "w",
+                encoding="utf-8"
+            ) as file:
+
+                json.dump(
+                    filters,
+                    file,
+                    indent=4,
+                    ensure_ascii=False
+                )
+
+            st.sidebar.success(
+                "Keyword aggiunta!"
+            )
+
+            st.rerun()
+
+        if confirm_col2.button(
+            "❌ NO",
+            key="cancel_add_keyword"
+        ):
+
+            st.rerun()
 
 # =========================
 # FILTRA ALERT
@@ -362,12 +470,10 @@ filtered_alerts = []
 
 for alert in alerts:
 
-    # filtro tipo
     if alert["tipo"] not in selected_types:
 
         continue
 
-    # ricerca keyword
     if search_term:
 
         text = (
