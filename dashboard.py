@@ -212,7 +212,7 @@ youtube_channels = sources.get(
     []
 )
 
-{channel['name']}"
+col1.write(f"• {channel['name']}")
 
 new_channel_name = st.sidebar.text_input(
     "Nome canale"
