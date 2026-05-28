@@ -201,8 +201,13 @@ with st.sidebar.expander(
 
         col1, col2 = st.columns([4, 1])
 
+        channel_link = channel.get(
+            "link",
+            "#"
+        )
+
         col1.markdown(
-            f"• [{channel['name']}]({channel['link']})"
+            f"• [{channel['name']}]({channel_link})"
         )
 
         if col2.button(
@@ -242,7 +247,7 @@ with st.sidebar.expander(
 
                 # estrazione handle @nomecanale
                 match = re.search(
-                    r'@([A-Za-z0-9_\\-]+)',
+                    r'@([A-Za-z0-9_\-]+)',
                     youtube_link
                 )
 
