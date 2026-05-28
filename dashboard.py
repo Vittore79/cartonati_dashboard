@@ -177,14 +177,67 @@ if st.sidebar.button(
 
 st.sidebar.header("🎥 Canali YouTube")
 
-for channel in sources.get(
+# =========================
+# YOUTUBE CHANNELS
+# =========================
+
+st.sidebar.header("📺 Canali YouTube")
+
+youtube_channels = sources.get(
     "youtube_channels",
     []
-):
+)
+
+for channel in youtube_channels:
 
     st.sidebar.write(
         f"• {channel['name']}"
     )
+
+new_channel_name = st.sidebar.text_input(
+    "Nome canale"
+)
+
+new_channel_id = st.sidebar.text_input(
+    "ID canale YouTube"
+)
+
+if st.sidebar.button(
+    "➕ Aggiungi canale"
+):
+
+    if (
+        new_channel_name
+        and new_channel_id
+    ):
+
+        youtube_channels.append({
+
+            "name": new_channel_name,
+
+            "id": new_channel_id
+        })
+
+        sources["youtube_channels"] = youtube_channels
+
+        with open(
+            SOURCES_FILE,
+            "w",
+            encoding="utf-8"
+        ) as file:
+
+            json.dump(
+                sources,
+                file,
+                indent=4,
+                ensure_ascii=False
+            )
+
+        st.sidebar.success(
+            "Canale aggiunto!"
+        )
+
+        st.rerun()
 
 # =========================
 # FILTRI
