@@ -367,9 +367,9 @@ def check_youtube_channels():
 
                         "link": link,
 
-                        "data": str(
-                            datetime.now()
-                        )
+                        "data": datetime.now().strftime(
+                        "%d-%m-%Y %H:%M:%S"
+                      )
                     }
 
                     save_alert(alert_data)
