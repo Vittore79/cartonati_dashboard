@@ -430,19 +430,6 @@ heartbeat()
 
 run_all_checks()
 
-# ogni 60 minuti
-schedule.every(60).minutes.do(
-    run_all_checks
-)
-
-# heartbeat ogni 12 ore
-schedule.every(12).hours.do(
-    heartbeat
-)
-
-# loop infinito
-while True:
-
-    schedule.run_pending()
-
-    time.sleep(1)
+print("\n========================")
+print("SCANSIONE COMPLETATA")
+print("========================")
