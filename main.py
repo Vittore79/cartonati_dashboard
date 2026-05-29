@@ -197,21 +197,20 @@ def check_rss_feeds():
                     # =========================
                     # SALVA JSON
                     # =========================
+                     alert_data = {
 
-                    alert_data = {
+                          "tipo": "rss",
 
-                        "tipo": "rss",
+                          "titolo": title,
 
-                        "titolo": title,
+                          "fonte": feed_url,
 
-                        "fonte": feed_url,
+                          "link": link,
 
-                        "link": link,
-
-                        "data": str(
-                            datetime.now()
-                        )
-                    }
+                          "data": datetime.now().strftime(
+                          "%d-%m-%Y %H:%M:%S"
+                         )
+                    }  
 
                     save_alert(alert_data)
 
