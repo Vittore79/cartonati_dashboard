@@ -7,6 +7,15 @@ import requests
 import sys
 from datetime import datetime
 
+from modules.supabase_client import (
+    get_keywords,
+    add_keyword,
+    delete_keyword,
+    get_rss_feeds,
+    add_rss_feed,
+    delete_rss_feed
+)
+
 # ======================================================
 # CONFIG PAGINA
 # ======================================================
@@ -93,6 +102,22 @@ sources = load_json(
     SOURCES_FILE,
     {}
 )
+
+rss_from_db = get_rss_feeds()
+
+sources["rss_feeds"] = [
+
+    row["url"]
+
+    for row in rss_from_db
+]
+
+filters["important_words"] = [
+
+    row["keyword"]
+
+    for row in get_keywords()
+]
 
 # ======================================================
 # DEFAULT STRUCTURE
@@ -485,11 +510,19 @@ if st.session_state.pending_action:
 
         if action["type"] == "add_rss":
 
+            add_rss_feed(
+                action["value"]
+            )
+
             sources["rss_feeds"].append(
                 action["value"]
             )
 
         elif action["type"] == "delete_rss":
+
+            delete_rss_feed(
+                action["value"]
+            )
 
             sources["rss_feeds"].remove(
                 action["value"]
@@ -509,11 +542,19 @@ if st.session_state.pending_action:
 
         elif action["type"] == "add_kw":
 
+            add_keyword(
+                action["value"]
+            )
+
             filters["important_words"].append(
                 action["value"]
             )
 
         elif action["type"] == "delete_kw":
+
+            delete_keyword(
+                action["value"]
+            )
 
             filters["important_words"].remove(
                 action["value"]
@@ -544,6 +585,10 @@ if st.session_state.pending_action:
         st.session_state.pending_action = None
 
         st.rerun()
+
+# ======================================================
+# FILTRA ALERT
+# ======================================================
 
 # ======================================================
 # FILTRA ALERT

@@ -1,25 +1,11 @@
 {
-    "important_words": [
-
-        "figc",
-        "inchiesta",
-        "ultras",
-        "arbitri",
-        "inter",
-        "juventus",
-        "procura",
-        "scandalo"
-    ],
-
+    "important_words": [],
     "team_words": [
-
         "juventus",
         "inter",
         "juve"
     ],
-
     "youtube_words": [
-
         "juventus",
         "inter",
         "figc",
