@@ -137,7 +137,8 @@ def check_rss_feeds():
                         )
 
                         age = now - article_date
-
+                            print("DATA ARTICOLO:", article_date)
+                            print("ETA:", age)
                         # SOLO ultime 48 ore
                         if age > timedelta(hours=48):
                             print("DATA:", article_date)
