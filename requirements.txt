@@ -4,3 +4,5 @@ schedule
 praw
 requests
 beautifulsoup4
+supabase
+python-telegram-bot
