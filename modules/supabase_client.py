@@ -146,3 +146,47 @@ def delete_youtube_channel(link):
         )
         .execute()
     )
+    
+# =========================
+# ALERTS
+# =========================
+
+def get_alerts():
+
+    response = (
+        supabase
+        .table("alerts")
+        .select("*")
+        .order(
+            "data",
+            desc=True
+        )
+        .execute()
+    )
+
+    return response.data
+
+
+def add_alert(alert_data):
+
+    print("INVIO ALERT A SUPABASE")
+
+    result = (
+        supabase
+        .table("alerts")
+        .insert(
+            {
+                "tipo": alert_data["tipo"],
+                "titolo": alert_data["titolo"],
+                "fonte": alert_data["fonte"],
+                "link": alert_data["link"],
+                "data": alert_data.get(
+                   "data",
+                   ""
+                )
+            }
+)
+        .execute()
+    )
+
+    print(result)

@@ -16,7 +16,8 @@ from modules.supabase_client import (
     delete_rss_feed,
     get_youtube_channels,
     add_youtube_channel,
-    delete_youtube_channel
+    delete_youtube_channel,
+    get_alerts
 )
 
 # ======================================================
@@ -91,10 +92,7 @@ def save_json(path, data):
 # CARICA DATI
 # ======================================================
 
-alerts = load_json(
-    ALERTS_FILE,
-    []
-)
+alerts = get_alerts()
 
 filters = load_json(
     FILTERS_FILE,

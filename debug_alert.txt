@@ -1,0 +1,1 @@
+{'tipo': 'test', 'titolo': 'TEST SUPABASE ALERT', 'fonte': 'heartbeat', 'link': 'https://test.it'}
