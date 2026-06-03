@@ -401,7 +401,23 @@ def check_youtube_channels():
 # =========================
 
 def run_all_checks():
+    
+    global RSS_FEEDS
+    global YOUTUBE_CHANNELS
+    global IMPORTANT_WORDS
+    global TEAM_WORDS
+    global YOUTUBE_WORDS
 
+    sources = load_sources()
+    filters = load_filters()
+
+    RSS_FEEDS = sources["rss_feeds"]
+    YOUTUBE_CHANNELS = sources["youtube_channels"]
+
+    IMPORTANT_WORDS = filters["important_words"]
+    TEAM_WORDS = filters["team_words"]
+    YOUTUBE_WORDS = filters["youtube_words"] 
+    
     print("\n========================")
     print("NUOVO CONTROLLO")
     print(
