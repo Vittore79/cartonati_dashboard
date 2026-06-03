@@ -140,10 +140,10 @@ def check_rss_feeds():
 
                         # SOLO ultime 48 ore
                         if age > timedelta(hours=48):
-
-                            print(
-                                "Vecchia:",
-                                title
+                            print("DATA:", article_date)
+                            print("ETA:", age)
+                            print("Vecchia:", title)
+                            
                             )
 
                             continue
