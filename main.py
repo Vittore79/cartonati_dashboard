@@ -426,8 +426,10 @@ print("========================")
 
 heartbeat()
 
+schedule.every(10).minutes.do(run_all_checks)
+
 run_all_checks()
 
-print("\n========================")
-print("SCANSIONE COMPLETATA")
-print("========================")
+while True:
+    schedule.run_pending()
+    time.sleep(30)
