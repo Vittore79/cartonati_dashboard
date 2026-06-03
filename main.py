@@ -144,8 +144,6 @@ def check_rss_feeds():
                             print("ETA:", age)
                             print("Vecchia:", title)
                             
-                            )
-
                             continue
 
                     # =========================
