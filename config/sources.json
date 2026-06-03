@@ -2,18 +2,5 @@
     "rss_feeds": [
         "https://test-supabase-rss.it/feed.xml"
     ],
-    "youtube_channels": [
-        {
-            "name": "Juventibus Live",
-            "id": "UC0b6N5p6M8h5lV5Hh0fJ2JQ"
-        },
-        {
-            "name": "Colpo Gobbo",
-            "id": "UCxxxxxxxx"
-        },
-        {
-            "name": "lAngoloDiKinoshi",
-            "link": "https://www.youtube.com/@lAngoloDiKinoshi"
-        }
-    ]
+    "youtube_channels": []
 }

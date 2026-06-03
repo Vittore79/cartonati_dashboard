@@ -13,7 +13,10 @@ from modules.supabase_client import (
     delete_keyword,
     get_rss_feeds,
     add_rss_feed,
-    delete_rss_feed
+    delete_rss_feed,
+    get_youtube_channels,
+    add_youtube_channel,
+    delete_youtube_channel
 )
 
 # ======================================================
@@ -110,6 +113,18 @@ sources["rss_feeds"] = [
     row["url"]
 
     for row in rss_from_db
+]
+
+youtube_from_db = get_youtube_channels()
+
+sources["youtube_channels"] = [
+
+    {
+        "name": row["name"],
+        "link": row["link"]
+    }
+
+    for row in youtube_from_db
 ]
 
 filters["important_words"] = [
@@ -530,11 +545,20 @@ if st.session_state.pending_action:
 
         elif action["type"] == "add_yt":
 
+            add_youtube_channel(
+                action["value"]["name"],
+                action["value"]["link"]
+            )
+
             sources["youtube_channels"].append(
                 action["value"]
             )
 
         elif action["type"] == "delete_yt":
+
+            delete_youtube_channel(
+                action["value"]["link"]
+            )
 
             sources["youtube_channels"].remove(
                 action["value"]

@@ -96,3 +96,53 @@ def delete_rss_feed(url):
         )
         .execute()
     )
+
+# =========================
+# YOUTUBE CHANNELS
+# =========================
+
+def get_youtube_channels():
+
+    response = (
+        supabase
+        .table("youtube_channels")
+        .select("*")
+        .order("id")
+        .execute()
+    )
+
+    return response.data
+
+
+def add_youtube_channel(
+    name,
+    link,
+    channel_id=""
+):
+
+    (
+        supabase
+        .table("youtube_channels")
+        .insert(
+            {
+                "name": name,
+                "link": link,
+                "channel_id": channel_id
+            }
+        )
+        .execute()
+    )
+
+
+def delete_youtube_channel(link):
+
+    (
+        supabase
+        .table("youtube_channels")
+        .delete()
+        .eq(
+            "link",
+            link
+        )
+        .execute()
+    )
