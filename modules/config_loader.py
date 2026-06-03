@@ -1,29 +1,47 @@
-import json
-
-# =========================
-# CARICA SOURCES
-# =========================
+from modules.supabase_client import (
+    get_rss_feeds,
+    get_youtube_channels,
+    get_keywords
+)
 
 def load_sources():
 
-    with open(
-        "config/sources.json",
-        "r",
-        encoding="utf-8"
-    ) as file:
+    rss_feeds = [
+        row["url"]
+        for row in get_rss_feeds()
+    ]
 
-        return json.load(file)
+    youtube_channels = []
 
-# =========================
-# CARICA FILTERS
-# =========================
+    for row in get_youtube_channels():
+
+        youtube_channels.append(
+            {
+                "name": row["name"],
+                "id": row.get(
+                    "channel_id",
+                    ""
+                )
+            }
+        )
+
+    return {
+        "rss_feeds": rss_feeds,
+        "youtube_channels": youtube_channels
+    }
+
 
 def load_filters():
 
-    with open(
-        "config/filters.json",
-        "r",
-        encoding="utf-8"
-    ) as file:
+    keywords = [
 
-        return json.load(file)
+        row["keyword"]
+
+        for row in get_keywords()
+    ]
+
+    return {
+        "important_words": keywords,
+        "team_words": keywords,
+        "youtube_words": keywords
+    }
