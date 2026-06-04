@@ -17,7 +17,8 @@ from modules.supabase_client import (
     get_youtube_channels,
     add_youtube_channel,
     delete_youtube_channel,
-    get_alerts
+    get_alerts,
+    get_last_scan
 )
 
 # ======================================================
@@ -161,9 +162,7 @@ st.write(
 
 st.divider()
 
-last_update = datetime.now().strftime(
-    "%d/%m/%Y %H:%M:%S"
-)
+last_update = get_last_scan()
 
 col1, col2 = st.columns([3, 1])
 

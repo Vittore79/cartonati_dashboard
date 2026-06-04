@@ -1,4 +1,5 @@
 from supabase import create_client
+from datetime import datetime
 
 SUPABASE_URL = "https://ptoavbkqgxdxqhyloezv.supabase.co"
 
@@ -190,3 +191,30 @@ def add_alert(alert_data):
     )
 
     print(result)
+    
+
+def update_last_scan():
+
+    supabase.table("settings").update(
+        {
+            "last_scan": datetime.now().strftime(
+                "%d/%m/%Y %H:%M:%S"
+            )
+        }
+    ).eq("id", 1).execute()
+
+
+def get_last_scan():
+
+    result = (
+        supabase
+        .table("settings")
+        .select("last_scan")
+        .eq("id", 1)
+        .execute()
+    )
+
+    if result.data:
+        return result.data[0]["last_scan"]
+
+    return "Mai"

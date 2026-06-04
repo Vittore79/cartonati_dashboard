@@ -430,6 +430,8 @@ def run_all_checks():
 
     check_youtube_channels()
 
+    update_last_scan()
+
 # =========================
 # AVVIO
 # =========================
