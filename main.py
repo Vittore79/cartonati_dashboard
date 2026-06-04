@@ -3,6 +3,7 @@ import schedule
 import time
 
 from datetime import datetime, timezone, timedelta
+from modules.supabase_client import update_last_scan
 
 from modules.config_loader import (
     load_sources,
