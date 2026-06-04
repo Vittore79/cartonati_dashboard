@@ -1,5 +1,6 @@
 from supabase import create_client
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 SUPABASE_URL = "https://ptoavbkqgxdxqhyloezv.supabase.co"
 
@@ -197,7 +198,9 @@ def update_last_scan():
 
     supabase.table("settings").update(
         {
-            "last_scan": datetime.now().strftime(
+            "last_scan": datetime.now(
+                ZoneInfo("Europe/Rome")
+            ).strftime(
                 "%d/%m/%Y %H:%M:%S"
             )
         }
