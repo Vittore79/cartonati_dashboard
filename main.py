@@ -118,6 +118,11 @@ def check_rss_feeds():
 
                     title = entry.title
                     link = entry.link
+                    
+                    summary = ""
+
+                    if hasattr(entry, "summary"):
+                        summary = entry.summary
 
                     # =========================
                     # CONTROLLO DATA
@@ -205,6 +210,7 @@ def check_rss_feeds():
                         "titolo": title,
                         "fonte": feed_url,
                         "link": link,
+                        "description": summary,
                         "data": datetime.now().strftime(
                             "%d-%m-%Y %H:%M:%S"
                         )

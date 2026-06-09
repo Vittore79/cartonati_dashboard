@@ -6,6 +6,13 @@ import subprocess
 import requests
 import sys
 from datetime import datetime
+from modules.ai_service import (
+    analyze_and_save
+)
+
+from modules.supabase_client import (
+    get_ai_analysis
+)
 
 from modules.supabase_client import (
     get_keywords,
@@ -719,5 +726,36 @@ for alert in filtered_alerts[:100]:
         st.markdown(
             f"[🔗 Apri sorgente]({alert['link']})"
         )
+        analysis = get_ai_analysis(
+            alert["id"]
+        )
+
+        if analysis:
+
+            with st.expander(
+                "📖 Leggi Analisi"
+            ):
+
+                st.write(
+                    analysis["summary"]
+                )
+
+        else:
+
+            if st.button(
+                "🧠 Analizza",
+                key=f"ai_{alert['id']}"
+            ):
+
+                with st.spinner(
+                    "Analisi AI in corso..."
+                ):
+
+                    analysis = analyze_and_save(
+                        alert["id"]
+                    )
+
+                st.rerun()
 
         st.divider()
+
