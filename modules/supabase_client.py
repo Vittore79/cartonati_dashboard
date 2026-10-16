@@ -171,12 +171,14 @@ def delete_youtube_channel(link):
 
 def get_alerts():
 
+    # L'ID cresce a ogni nuovo inserimento: ordinarlo in modo
+    # decrescente mette gli alert appena raccolti in cima.
     response = (
         supabase
         .table("alerts")
         .select("*")
         .order(
-            "data",
+            "id",
             desc=True
         )
         .execute()
