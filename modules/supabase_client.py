@@ -5,8 +5,8 @@ from zoneinfo import ZoneInfo
 
 SUPABASE_URL = "https://ptoavbkqgxdxqhyloezv.supabase.co"
 
-# La chiave segreta va configurata nelle Secrets di Streamlit Cloud
-# oppure come variabile d'ambiente SUPABASE_SECRET_KEY sul server che esegue main.py.
+# Usa la chiave segreta configurata nelle Secrets di Streamlit Cloud
+# oppure nella variabile d'ambiente del server che esegue main.py.
 try:
     import streamlit as st
     SUPABASE_KEY = st.secrets.get("SUPABASE_SECRET_KEY")
